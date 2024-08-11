@@ -5,7 +5,9 @@ import com.orderinventoryapp.inventory_service.service.InventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
@@ -36,5 +38,17 @@ public class InventoryController {
         List<Inventory> inventoryList = inventoryService.getAllInventoryItems();
         return ResponseEntity.ok(inventoryList);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Inventory> updateInventory(@PathVariable Long id, @RequestBody Inventory inventory) {
+        try {
+            // Update stock in the inventory
+            Inventory updatedInventory = inventoryService.updateInventoryStock(id, inventory.getStock());
+            return ResponseEntity.ok(updatedInventory);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

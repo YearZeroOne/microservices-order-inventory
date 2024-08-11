@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class InventoryService {
 
@@ -23,12 +24,18 @@ public class InventoryService {
 
         if (inventoryOptional.isPresent()) {
             Inventory inventory = inventoryOptional.get();
-            inventory.setStock(newStock);
-            return inventoryRepository.save(inventory);
+            // Only update stock if it is valid (i.e., non-negative)
+            if (newStock >= 0) {
+                inventory.setStock(newStock);
+                return inventoryRepository.save(inventory);
+            } else {
+                throw new RuntimeException("Stock cannot be negative.");
+            }
         } else {
             throw new RuntimeException("Inventory item with ID " + id + " not found.");
         }
     }
+
 
     public Optional<Inventory> getInventoryById(Long id) {
         return inventoryRepository.findById(id);
