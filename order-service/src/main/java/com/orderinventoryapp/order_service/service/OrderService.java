@@ -5,6 +5,9 @@ import com.orderinventoryapp.order_service.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +21,16 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order createOrder(Order order) {
+    public Order createOrder(Long productId, int quantity) {
+        LocalDateTime currentDateTime = LocalDateTime.now(ZoneId.systemDefault());
+
+
+
+        Order order = new Order();
+        order.setProductId(productId);
+        order.setQuantity(quantity);
+        order.setOrderDate(currentDateTime);
+
         return orderRepository.save(order);
     }
 
